@@ -1,0 +1,921 @@
+
+<?php
+
+$con=mysqli_connect("localhost","root","","baby_planet");
+
+session_start();
+$id=$_SESSION['id'];
+$product_id=$_GET["item_id"];
+$total=$_GET['totalprice'];
+$status="";
+if (isset($_POST['action']) && $_POST['action']=="remove"){
+if(!empty($_SESSION["shopping_cart"])) {
+    foreach($_SESSION["shopping_cart"] as $key => $value) {
+        if($_POST["code"] == $key){
+        unset($_SESSION["shopping_cart"][$key]);
+        $status = "<div class='box' style='color:red;'>
+        Product is removed from your cart!</div>";
+        }
+        if(empty($_SESSION["shopping_cart"]))
+        unset($_SESSION["shopping_cart"]);
+            }       
+        }
+}
+
+//if(!isset($_SESSION['email']))
+//{
+//header("location:index.html");
+//} 
+
+$sql="select * from baby_product INNER JOIN baby_cart ON baby_product.product_id=baby_cart.product_id where baby_cart.login_id=$id";
+$exe=mysqli_query($con,$sql);
+
+
+$customer_bank_info=mysqli_query($con,"SELECT * FROM `tbl_bank_info` WHERE  status='VALID' and name_on_card='customer'");
+
+$row_customer=mysqli_fetch_array($customer_bank_info);
+
+?>
+
+<!DOCTYPE HTML>
+<html>
+<head>
+<title>Baby_Planet </title>
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+<meta name="keywords" content="Glance Design Dashboard Responsive web template, Bootstrap Web Templates, Flat Web Templates, Android Compatible web template, 
+SmartPhone Compatible web template, free WebDesigns for Nokia, Samsung, LG, SonyEricsson, Motorola web design" />
+
+
+
+  <script>
+         addEventListener("load", function () {
+          setTimeout(hideURLbar, 0);
+         }, false);
+         
+         function hideURLbar() {
+          window.scrollTo(0, 1);
+         }
+      </script>
+      <!--//meta tags ends here-->
+      <!--booststrap-->
+    
+      <!-- //font-awesome icons -->
+      <!--Shoping cart-->
+      <link rel="stylesheet" href="css2/shop.css" type="text/css" />
+      <!--//Shoping cart-->
+      <!--checkout-->
+      <link rel="stylesheet" type="text/css" href="css2/checkout.css">
+      <!--//checkout-->
+      <link href="css2/easy-responsive-tabs.css" rel='stylesheet' type='text/css' />
+      <!--stylesheets-->
+      <link href="css2/style.css" rel='stylesheet' type='text/css' media="all">
+      <!--//stylesheets-->
+      <link href="//fonts.googleapis.com/css?family=Sunflower:500,700" rel="stylesheet">
+      <link href="//fonts.googleapis.com/css?family=Open+Sans:400,600,700" rel="stylesheet">
+
+
+
+
+<!------------------- -------->
+
+
+
+<script type="application/x-javascript"> addEventListener("load", function() { setTimeout(hideURLbar, 0); }, false); function hideURLbar(){ window.scrollTo(0,1); } </script>
+
+<!-- Bootstrap Core CSS -->
+<link href="css/bootstrap.css" rel='stylesheet' type='text/css' />
+
+<!-- Custom CSS -->
+<link href="css/style.css" rel='stylesheet' type='text/css' />
+
+<!-- font-awesome icons CSS -->
+<link href="css/font-awesome.css" rel="stylesheet"> 
+<!-- //font-awesome icons CSS-->
+
+<!-- side nav css file -->
+<link href='css/SidebarNav.min.css' media='all' rel='stylesheet' type='text/css'/>
+<!-- //side nav css file -->
+ 
+ <!-- js-->
+<script src="js/jquery-1.11.1.min.js"></script>
+<script src="js/modernizr.custom.js"></script>
+
+<!--webfonts-->
+<link href="//fonts.googleapis.com/css?family=PT+Sans:400,400i,700,700i&amp;subset=cyrillic,cyrillic-ext,latin-ext" rel="stylesheet">
+<!--//webfonts--> 
+
+<!-- chart -->
+<script src="js/Chart.js"></script>
+<!-- //chart -->
+
+<!-- Metis Menu -->
+<script src="js/metisMenu.min.js"></script>
+<script src="js/custom.js"></script>
+<link href="css/custom.css" rel="stylesheet">
+<link href="style.css" rel="stylesheet" type="text/css" media="all" />
+<!--//Metis Menu -->
+<style>
+#chartdiv {
+  width: 100%;
+  height: 295px;
+}
+</style>
+<!--pie-chart --><!-- index page sales reviews visitors pie chart -->
+<script src="js/pie-chart.js" type="text/javascript"></script>
+ <script type="text/javascript">
+
+        $(document).ready(function () {
+            $('#demo-pie-1').pieChart({
+                barColor: '#2dde98',
+                trackColor: '#eee',
+                lineCap: 'round',
+                lineWidth: 8,
+                onStep: function (from, to, percent) {
+                    $(this.element).find('.pie-value').text(Math.round(percent) + '%');
+                }
+            });
+
+            $('#demo-pie-2').pieChart({
+                barColor: '#8e43e7',
+                trackColor: '#eee',
+                lineCap: 'butt',
+                lineWidth: 8,
+                onStep: function (from, to, percent) {
+                    $(this.element).find('.pie-value').text(Math.round(percent) + '%');
+                }
+            });
+
+            $('#demo-pie-3').pieChart({
+                barColor: '#ffc168',
+                trackColor: '#eee',
+                lineCap: 'square',
+                lineWidth: 8,
+                onStep: function (from, to, percent) {
+                    $(this.element).find('.pie-value').text(Math.round(percent) + '%');
+                }
+            });
+
+           
+        });
+
+    </script>
+<!-- //pie-chart --><!-- index page sales reviews visitors pie chart -->
+
+    <!-- requried-jsfiles-for owl -->
+                    <link href="css/owl.carousel.css" rel="stylesheet">
+                    <script src="js/owl.carousel.js"></script>
+                        <script>
+                            $(document).ready(function() {
+                                $("#owl-demo").owlCarousel({
+                                    items : 3,
+                                    lazyLoad : true,
+                                    autoPlay : true,
+                                    pagination : true,
+                                    nav:true,
+                                });
+                            });
+                        </script>
+                    <!-- //requried-jsfiles-for owl -->
+
+
+                    <style>
+  
+  
+  
+  .a_btn{
+    
+    background-color: green;
+  color: white;
+  padding: 10px 20px;
+  text-align: center;
+  text-decoration: none;
+  display: inline-block;
+  }
+  .errmessage
+    {
+      color:red;
+      }
+  </style>
+  <style>
+body {
+  font-family: "Lato", sans-serif;
+}
+
+.sidebar {
+  height: 100%;
+  width: 0;
+  position: fixed;
+  z-index: 1;
+  top: 0;
+  left: 0;
+  background-color: pink;
+  overflow-x: hidden;
+  transition: 0.5s;
+  padding-top: 60px;
+}
+
+.sidebar a {
+  padding: 8px 8px 8px 32px;
+  text-decoration: none;
+  font-size: 25px;
+  color: rose;
+  display: block;
+  transition: 0.3s;
+}
+
+.sidebar a:hover {
+  color: red;
+}
+
+.sidebar .closebtn {
+  position: absolute;
+  top: 0;
+  right: 25px;
+  font-size: 36px;
+  margin-left: 50px;
+}
+
+.openbtn {
+  font-size: 20px;
+  cursor: pointer;
+  background-color: #111;
+  color: white;
+  padding: 10px 15px;
+  border: none;
+}
+
+.openbtn:hover {
+  background-color: yellow;
+}
+
+#main {
+  transition: margin-left .5s;
+  padding: 16px;
+  color:white;
+}
+
+/* On smaller screens, where height is less than 450px, change the style of the sidenav (less padding and a smaller font size) */
+@media screen and (max-height: 450px) {
+  .sidebar {padding-top: 15px;}
+  .sidebar a {font-size: 15px;}
+}
+</style>
+</head> 
+<body class="cbp-spmenu-push">
+    <div class="main-content">
+    <div class="cbp-spmenu cbp-spmenu-vertical cbp-spmenu-left" id="cbp-spmenu-s1">
+        <!--left-fixed -navigation-->
+        <aside class="sidebar-left">
+      <nav class="navbar navbar-inverse">
+          <div class="navbar-header">
+            <div id="mySidebar" class="sidebar">
+            <a href="javascript:void(0)" class="closebtn" onclick="closeNav()">×</a>
+            <a href="javascript:void(0)" class="closebtn" onclick="closeNav()">×</a>
+  <a href="index.php"> <h4><i class="fa fa-dashboard"></i> <span>Home</h4></span></a>
+  <a href="view_product.php"><h4><i class="fa fa-arrow-circle-right"></i> <span>View Product</h4></span></a>
+  <a href="cart.php"><h4><i class="fa fa-arrow-circle-right"></i> <span>View Cart</h4></span></a>
+  <a href="changepassword.php"><h4><i class="fa fa-arrow-circle-right"></i> <span>Change password</h4></span></a>
+  <a href="logout.php"><h4><i class="fa fa-sign-in"></i> <span>Logout</h4></span></a>
+  
+</div>
+<div id="main">
+  <button style="color:green;" class="openbtn" onclick="openNav()">☰ BABY PLANET</button>  
+</div>
+
+<script>
+function openNav() {
+  document.getElementById("mySidebar").style.width = "250px";
+  document.getElementById("main").style.marginLeft = "250px";
+}
+
+function closeNav() {
+  document.getElementById("mySidebar").style.width = "0";
+  document.getElementById("main").style.marginLeft= "0";
+}
+</script>     
+          <div class="navbar-header">
+            <button type="button" class="navbar-toggle collapsed" data-toggle="collapse" data-target=".collapse" aria-expanded="false">
+            <span class="sr-only">Toggle navigation</span>
+            <span class="icon-bar"></span>
+            <span class="icon-bar"></span>
+            <span class="icon-bar"></span>
+            </button>
+            <h1><a class="navbar-brand" href="../index.html"></span></a></h1>
+          </div>
+               
+            </ul>
+          </div>
+      </nav>
+    </aside>
+    </div>
+        <!--left-fixed -navigation-->
+        
+        <!-- header-starts -->
+        <div class="sticky-header header-section ">
+            <div class="header-left">
+                <!--toggle button start-->
+                
+                    <div class="clearfix"> </div>
+                </div>
+                <!--notification menu end -->
+                <div class="clearfix"> </div>
+            </div>
+            <div class="header-right">
+                
+                
+                
+                
+                <div class="profile_details">       
+                    <ul>
+                        <li class="dropdown profile_details_drop">
+                            
+                            <ul class="dropdown-menu drp-mnu">
+                                <li> <a href="index.php"><i class="fa fa-cog"></i> Home</a> </li> 
+                                <li> <a href="about_us.php"><i class="fa-arrow-circle-right"></i> About Us</a> </li> 
+                                <!--<li> <a href="login.php"><i class="fa fa-sign-in"></i> Login</a> </li> 
+                                <!--<li> <a href="registration.php"><i class="fa fa-user"></i> User Registration</a> </li>-->
+                                 <li>
+                
+              </li>
+                            </ul>
+                        </li>
+                    </ul>
+                </div>
+                <div class="clearfix"> </div>               
+            </div>
+            <div class="clearfix"> </div>   
+        </div>
+        <!-- //header-ends -->
+        <!-- main content start-->
+        <div id="page-wrapper">
+            <div class="main-page">
+            <div class="col_3">
+            
+            <div class="clearfix"> </div>
+        </div>
+        
+    
+
+                
+    
+    <!-- for amcharts js -->
+            <script src="js/amcharts.js"></script>
+            <script src="js/serial.js"></script>
+            <script src="js/export.min.js"></script>
+            <link rel="stylesheet" href="css/export.css" type="text/css" media="all" />
+            <script src="js/light.js"></script>
+    <!-- for amcharts js -->
+
+    <script  src="js/index1.js"></script>
+
+    
+        <div class="charts">        
+            <div class="mid-content-top charts-grids">
+               <center><h1 style="color:green;">Make your payment</h1></center>  
+                
+                    <!--//sreen-gallery-cursual---->
+            </div>
+        </div>
+        
+
+
+        <div class="col_1">
+            <div class="col-md-8 span_6">
+              <?php 
+
+if (isset($_POST["submit_buy"]))
+
+{
+
+
+
+
+
+?>
+ 
+                             
+                              <div class="container">
+            
+                <div class="col-6">
+<center><label style="color:blue";> Your payment amount=<?php 
+ echo $total ?></label></center>
+</div>
+</div>
+
+
+
+<?php
+
+
+}
+$_SESSION['$total']=$total;
+ ?>
+
+                
+                    
+            </div>
+            <div class="col-md-4 span_8">
+                
+            </div>
+            <div class="col-md-4 span_8">
+                
+                <div class="clearfix"> </div>
+            </div>
+            <div class="clearfix"> </div>
+
+</head>
+
+<body>
+    <!-- Search Wrapper Area Start -->
+    <div class="search-wrapper section-padding-100">
+       
+        <div class="container">
+            <div class="row">
+                <div class="col-12">
+                    <div class="search-content">
+                       <!-- <form action="#" method="get">
+                            <input type="search" name="search" id="search" placeholder="Type your keyword...">
+                          
+                        </form>-->
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+    <!-- Search Wrapper Area End -->
+
+    <!-- ##### Main Content Wrapper Start ##### -->
+    <div class="main-content-wrapper d-flex clearfix">
+
+        <!-- Mobile Nav (max width 767px)-->
+        <div class="mobile-nav">
+            <!-- Navbar Brand -->
+            <div class="amado-navbar-brand">
+                <a href="index.php"><img src="img/core-img/logo.png" alt=""></a>
+            </div>
+            <!-- Navbar Toggler -->
+           
+        </div>
+
+        <!-- Header Area Start -->
+        <header class="header-area clearfix">
+            <!-- Close Icon -->
+            
+            <!-- Logo -->
+            
+            <!-- Button Group -->
+            
+            <!-- Cart Menu -->
+                  </header>
+        <!-- Header Area End -->
+        <div class="container">
+            
+                <div class="col-6">
+<center><label style="color:blue";> Your payment amount=<?php 
+ echo $total ?></label></center>
+</div>
+</div>
+
+
+           
+            
+    
+   <!-- ////////////////////////////////////////  -->
+
+      <section class="checkout py-lg-4 py-md-3 py-sm-3 py-3">
+         <div class="container py-lg-5 py-md-4 py-sm-4 py-3">
+            <div class="ads-grid_shop">
+               <div class="shop_inner_inf">
+                  <div class="privacy about">
+                     <h3>Pay<span>ment</span></h3>
+                     <!--/tabs-->
+                     <div class="responsive_tabs">
+                        <div id="horizontalTab">
+                           <ul class="resp-tabs-list">
+                           
+                              <li>Credit/Debit</li>
+                          
+                           </ul>
+                           <div class="resp-tabs-container">
+                              <!--/tab_one-->
+                              
+                              <!--//tab_one-->
+                              <div class="tab2">
+                                 <div class="pay_info">
+
+
+
+
+                                   
+<form action="payment_action.php" method="POST" class="creditly-card-form agileinfo_form">
+                  <section class="creditly-wrapper wthree, w3_agileits_wrapper">
+                    <div class="credit-card-wrapper">
+                      <div class="first-row form-group">
+                        <div class="controls">
+                          <label class="control-label">Name on Card</label>
+                          <input class="billing-address-name form-control" type="text" name="name" id="name" style="color:grey" value="<?php echo $row_customer['name_on_card'] ?>" disabled>
+                        </div>
+                        <div class="w3_agileits_card_number_grids">
+                          <div class="w3_agileits_card_number_grid_left">
+                            <div class="controls">
+                              <label class="control-label">Card Number</label>
+                              <input class="number credit-card-number form-control" type="text" name="cnumber" id="cnumber" inputmode="numeric" autocomplete="cc-number" autocompletetype="cc-number" x-autocompletetype="cc-number"
+                                      style="color:grey" value="<?php echo $row_customer['card_number'] ?>" disabled>
+                            </div>
+                          </div>
+                          <div class="w3_agileits_card_number_grid_right">
+                            <div class="controls">
+                              <label class="control-label">CVV</label>
+                              <input 
+                                      class="number credit-card-number form-control" maxlength="3" min="3" pattern="^[0-9]{3}$" title="Enter Valid CVV"
+                                      type="password" name="security_code" id="security_code"
+                                      placeholder="Enter CVV" required>
+                            </div>
+                          </div>
+                          <div class="w3_agileits_card_number_grid_right">
+                            <div class="controls">
+                              <label class="control-label">Expiry Date</label>
+                              <input 
+                                      class="number credit-card-number form-control" maxlength="3" min="3" title="Enter your card expiry date"
+                                      type="text" name="exp_date" id="exp_date"
+                                      value="<?php echo $row_customer['exp_date'] ?>" disabled>
+                            </div>
+                          </div>
+                          <div class="clear"> </div>
+                        </div>
+                         
+                      </div>
+                      <button class="submit a_btn" name="payment" id="payment"><span>Pay and confirm Order </span></button>
+                    </div>
+                  </section>
+                </form>
+
+
+
+
+
+
+
+
+
+                                 </div>
+                              </div>
+                              
+                     
+                           </div>
+                        </div>
+                     </div>
+                     <!--//tabs-->
+                  </div>
+               </div>
+               <!-- //payment -->
+               <div class="clearfix"></div>
+            </div>
+         </div>
+      </section>
+<!--lllllllllllllllllllllllllllllllllllllllllllll -->
+
+
+    <!--Cart Section-->
+    
+                    <!-- ------------function to count total--------- -->
+                    <script> var total=0;</script>                    <script>
+                    function lookup(arg){
+                        id =arg.getAttribute('id');
+                        a = Number(document.getElementById(id).value);
+                        b = Number(document.getElementById('unitcost'+id).value);
+                        c=a*b;
+                        total=total+c;
+                        document.getElementById('tprice'+id).value = c;
+                        document.getElementById('totalprice').value=total;
+                    }
+    </script>
+                 
+            
+          
+                    <!-- <script>
+                    function lookup(arg){
+                        id =arg.getAttribute('id');
+                        a = Number(document.getElementById(id).value);
+                        b = Number(document.getElementById('unitcost'+id).value);
+                        c=a*b;
+                        document.getElementById('tprice'+id).value = c;
+                    }
+    </script> -->
+            
+                
+                  
+
+              <!--  <div class="cart-options clearfix">
+                    <div class="pull-left">
+                        <div class="apply-coupon clearfix">
+                            <div class="form-group clearfix">
+                                <input type="text" name="coupon-code" value="" placeholder="Your Coupon Code">
+                            </div>
+                            <div class="form-group clearfix">
+                                <button type="button" class="theme-btn btn-style-one">Apply</button>
+                            </div>
+                        </div>
+                    </div>-->
+
+                  <!--  <div class="pull-right">
+           <!-- <center> <button type="button" class="theme-btn btn-style-one">Update Cart</button></center></div>-->
+                    </div>
+
+                </div>
+
+                <div class="row clearfix">
+
+                    <div class="column pull-right col-md-9 col-sm-7 col-xs-10">
+                        
+
+                      
+                    </div>
+
+                </div>
+
+
+            </div>
+
+        </div>
+    </section>
+    
+
+
+
+
+
+
+
+          </div> 
+    <!-- ##### Newsletter Area End ##### -->
+
+    <!-- ##### Footer Area Start ##### -->
+    <!-- <footer class="footer_area clearfix">
+        <div class="container">
+            <div class="row align-items-center">
+                <!-- Single Widget Area -->
+             <!--   <div class="col-12 col-lg-4">
+                    <div class="single_widget_area">
+                        <!-- Logo -->
+                       <!-- <div class="footer-logo mr-50">
+                            <a href="index.php"><img src="img/core-img/logo2.png" alt=""></a>
+                        </div>
+                        <!-- Copywrite Text -->
+                       <!-- <p class="copywrite"><!-- Link back to Colorlib can't be removed. Template is licensed under CC BY 3.0. -->
+<!--Copyright &copy;<script>document.write(new Date().getFullYear());</script> All rights reserved | This template is made with <i class="fa fa-heart-o" aria-hidden="true"></i> by <a href="https://colorlib.com" target="_blank">Colorlib</a>
+<!-- Link back to Colorlib can't be removed. Template is licensed under CC BY 3.0. --></p>
+                    </div>
+                </div>
+                <!-- Single Widget Area -->
+               <!-- <div class="col-12 col-lg-8">
+                    <div class="single_widget_area">
+                        <!-- Footer Menu -->
+                        <!--<div class="footer_menu">
+                            <nav class="navbar navbar-expand-lg justify-content-end">
+                                <button class="navbar-toggler" type="button" data-toggle="collapse" data-target="#footerNavContent" aria-controls="footerNavContent" aria-expanded="false" aria-label="Toggle navigation"><i class="fa fa-bars"></i></button>
+                               <!-- <div class="collapse navbar-collapse" id="footerNavContent">
+                                    <ul class="navbar-nav ml-auto">
+                                        <li class="nav-item active">
+                                            <a class="nav-link" href="index.php">Home</a>
+                                        </li>
+                                        
+                                        <li class="nav-item">
+                                            <a class="nav-link" href="index.php">Product</a>
+                                        </li>
+                                        <li class="nav-item">
+                                            <a class="nav-link" href="shopping-cart.php">Cart</a>
+                                        </li>
+                                        
+                                    </ul>
+                                </div>
+                            </nav>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </footer>
+    <!-- ##### Footer Area End ##### -->
+
+    <!-- ##### jQuery (Necessary for All JavaScript Plugins) ##### -->
+    <script src="js/jquery/jquery-2.2.4.min.js"></script>
+    <!-- Popper js -->
+    <script src="js/popper.min.js"></script>
+    <!-- Bootstrap js -->
+    <script src="js/bootstrap.min.js"></script>
+    <!-- Plugins js -->
+    <script src="js/plugins.js"></script>
+    <!-- Active js -->
+    <script src="js/active.js"></script>
+
+
+
+<!-------------------------------------- llllllllllllllllllll-->
+
+<!-- //Modal 1-->
+      <!--js working-->
+      <script src='js/jquery-2.2.3.min.js'></script>
+      <!--//js working-->
+      <!-- cart-js -->  
+      <script src="js/minicart.js"></script>
+      <script>
+         toys.render();
+         
+         toys.cart.on('toys_checkout', function (evt) {
+            var items, len, i;
+         
+            if (this.subtotal() > 0) {
+                items = this.items();
+         
+                for (i = 0, len = items.length; i < len; i++) {}
+            }
+         });
+      </script>
+      <!--// cart-js -->
+      <!--quantity-->
+      <script>
+         $('.value-plus').on('click', function () {
+            var divUpd = $(this).parent().find('.value'),
+                newVal = parseInt(divUpd.text(), 10) + 1;
+            divUpd.text(newVal);
+         });
+         
+         $('.value-minus').on('click', function () {
+            var divUpd = $(this).parent().find('.value'),
+                newVal = parseInt(divUpd.text(), 10) - 1;
+            if (newVal >= 1) divUpd.text(newVal);
+         });
+      </script>
+      <!--quantity-->
+      <!--closed-->
+      <script>
+         $(document).ready(function (c) {
+            $('.close1').on('click', function (c) {
+                $('.rem1').fadeOut('slow', function (c) {
+                    $('.rem1').remove();
+                });
+            });
+         });
+      </script>
+      <script>
+         $(document).ready(function (c) {
+            $('.close2').on('click', function (c) {
+                $('.rem2').fadeOut('slow', function (c) {
+                    $('.rem2').remove();
+                });
+            });
+         });
+      </script>
+      <script>
+         $(document).ready(function (c) {
+            $('.close3').on('click', function (c) {
+                $('.rem3').fadeOut('slow', function (c) {
+                    $('.rem3').remove();
+                });
+            });
+         });
+      </script>
+      <!--//closed-->
+      <!-- start-smoth-scrolling -->
+      <script src="js/move-top.js"></script>
+      <script src="js/easing.js"></script>
+      <script>
+         jQuery(document).ready(function ($) {
+            $(".scroll").click(function (event) {
+                event.preventDefault();
+                $('html,body').animate({
+                    scrollTop: $(this.hash).offset().top
+                }, 900);
+            });
+         });
+      </script>
+      <!-- start-smoth-scrolling -->
+      <!-- here stars scrolling icon -->
+      <script>
+         $(document).ready(function () {
+         
+            var defaults = {
+                containerID: 'toTop', // fading element id
+                containerHoverID: 'toTopHover', // fading element hover id
+                scrollSpeed: 1200,
+                easingType: 'linear'
+            };
+            $().UItoTop({
+                easingType: 'easeOutQuart'
+            });
+         
+         });
+      </script>
+      <!-- //here ends scrolling icon -->
+      <!--bootstrap working-->
+      <script src="js/bootstrap.min.js"></script>
+      <!-- //bootstrap working-->
+
+
+
+
+      <!-- //Modal 1-->
+      <!--js working-->
+      <script src='js/jquery-2.2.3.min.js'></script>
+      <!--//js working-->
+      <!-- cart-js -->
+      <script src="js/minicart.js"></script>
+      <script>
+         toys.render();
+         
+         toys.cart.on('toys_checkout', function (evt) {
+          var items, len, i;
+         
+          if (this.subtotal() > 0) {
+            items = this.items();
+         
+            for (i = 0, len = items.length; i < len; i++) {}
+          }
+         });
+      </script>
+      <!--// cart-js -->
+      <!-- easy-responsive-tabs -->
+      <script src="js/easy-responsive-tabs.js"></script>
+      <script>
+         $(document).ready(function () {
+          $('#horizontalTab').easyResponsiveTabs({
+            type: 'default', //Types: default, vertical, accordion           
+            width: 'auto', //auto or any width like 600px
+            fit: true, // 100% fit in a container
+            closed: 'accordion', // Start closed if in accordion view
+            activate: function (event) { // Callback function if tab is switched
+              var $tab = $(this);
+              var $info = $('#tabInfo');
+              var $name = $('span', $info);
+              $name.text($tab.text());
+              $info.show();
+            }
+          });
+          $('#verticalTab').easyResponsiveTabs({
+            type: 'vertical',
+            width: 'auto',
+            fit: true
+          });
+         });
+      </script>
+      <!-- credit-card -->
+      <script src="js/creditly.js"></script>
+      <link rel="stylesheet" href="css/creditly.css" type="text/css" media="all" />
+      <script>
+         $(function () {
+          var creditly = Creditly.initialize(
+            '.creditly-wrapper .expiration-month-and-year',
+            '.creditly-wrapper .credit-card-number',
+            '.creditly-wrapper .security-code',
+            '.creditly-wrapper .card-type');
+         
+          $(".creditly-card-form .submit").click(function (e) {
+            e.preventDefault();
+            var output = creditly.validate();
+            if (output) {
+              // Your validated credit card output
+              console.log(output);
+            }
+          });
+         });
+      </script>
+      <!-- //credit-card -->
+      <!-- start-smoth-scrolling -->
+      <script src="js/move-top.js"></script>
+      <script src="js/easing.js"></script>
+      <script>
+         jQuery(document).ready(function ($) {
+          $(".scroll").click(function (event) {
+            event.preventDefault();
+            $('html,body').animate({
+              scrollTop: $(this.hash).offset().top
+            }, 900);
+          });
+         });
+      </script>
+      <!-- start-smoth-scrolling -->
+      <!-- here stars scrolling icon -->
+      <script>
+         $(document).ready(function () {
+         
+          var defaults = {
+            containerID: 'toTop', // fading element id
+            containerHoverID: 'toTopHover', // fading element hover id
+            scrollSpeed: 1200,
+            easingType: 'linear'
+          };
+          $().UItoTop({
+            easingType: 'easeOutQuart'
+          });
+         
+         });
+      </script>
+      <!-- //here ends scrolling icon -->
+      <!--bootstrap working-->
+      <script src="js/bootstrap.min.js"></script>
+      <!-- //bootstrap working-->
+</body>
+
+</html>
